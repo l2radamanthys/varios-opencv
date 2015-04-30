@@ -36,18 +36,24 @@ ero_clos_g = cv2.cvtColor(ero_clos, cv2.COLOR_BGR2GRAY)
 
 transform = cv2.distanceTransform(ero_clos_g, cv2.DIST_L2, 0)
 ret, tr_thresh = cv2.threshold(transform, 0.3*transform.max(), 255, cv2.THRESH_BINARY)
-#tr_thresh_g = cv2.cvtColor(tr_thresh, cv2.COLOR_BGR2GRAY)
+tr_thresh_g = cv2.cvtColor(tr_thresh, cv2.COLOR_BGR2GRAY)#, dstCn=cv2.CV_8U)
+print tr_thresh_g.type()
 
-ot, contornos, hier = cv2.findContours(ero_clos_g, cv2.RETR_CCOMP,cv2.CHAIN_APPROX_SIMPLE)
+
+#ot, contornos, hier = cv2.findContours(ero_clos_g, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+ot, contornos, hier = cv2.findContours(tr_thresh_g, mode=cv2.RETR_CCOMP, method=cv2.CHAIN_APPROX_SIMPLE)
 #ot, contornos, hier = cv2.findContours(tr_thresh_g, cv2.RETR_CCOMP,cv2.CHAIN_APPROX_SIMPLE)
-print len(contornos) or 0
+print "Elementos Detectados: {}".format(len(contornos) or 0)
 
 circ_img = copy.copy(image)
+i = 1
 for cnt in contornos:
     (x, y), rad = cv2.minEnclosingCircle(cnt)
     center = (int(x), int(y))
     rad = int(rad)
     cv2.circle(circ_img, center, rad, (255,255,255), 3)
+    cv2.putText(circ_img, str(i), center, cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,255), 2, cv2.LINE_AA)
+    i += 1
     
 
 #imagenes a mostrar
