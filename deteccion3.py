@@ -67,12 +67,12 @@ def main():
     imagenes.append(['image_gray', image_gray, 'gray'])
 
     #usar el difuminado gausiano no fue muy practico
-    #gnucleo = (3, 3)
-    #gblur_image = cv2.GaussianBlur(image, gnucleo, 0)
-    #imagenes.append(['gblur_image', gblur_image, 'gray'])
+    gnucleo = (3, 3)
+    gblur_image = cv2.GaussianBlur(image, gnucleo, 0)
+    imagenes.append(['gblur_image', gblur_image, 'gray'])
 
-    #ret, thresh = cv2.threshold(gblur_image, 80, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    ret, thresh = cv2.threshold(image_gray, 80, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    ret, thresh = cv2.threshold(gblur_image, 80, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    #ret, thresh = cv2.threshold(image_gray, 80, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     imagenes.append(['thresh', thresh, 'gray'])
 
     kernel = numpy.ones((2,2), numpy.uint8) #nucleo
@@ -127,11 +127,12 @@ def main():
     for cnt in contornos:
         (x, y), rad = cv2.minEnclosingCircle(cnt)
         center = (int(x), int(y))
+        center2 = (int(x)-10, int(y)-10)
         rad = int(rad)
-        if rad < 3: #algunos contornos detectados son muy pequeños
+        if rad < 3: #algunos contornos detectados son muy pequenios
             rad += 6
         cv2.circle(circ_img, center, rad, (0,0,0), -1)
-        cv2.putText(num_img, str(i), center, cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
+        cv2.putText(num_img, str(i), center2, cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0,0,0), 2, cv2.LINE_AA)
         i += 1
 
     imagenes.append(['num_img', num_img, 'gray'])
